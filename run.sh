@@ -1,12 +1,11 @@
 #!/bin/sh
 
-if [ -z "$NO_AUTH" ]; then
-  if [ -z "$PASSWORD" ]; then
-    PASSWORD=$(pwgen -N 1)
-  fi
-  touch /etc/mosquitto/users
-  mosquitto_passwd -b /etc/mosquitto/users user $PASSWORD
-  echo password_file /etc/mosquitto/users >> /etc/mosquitto/mosquitto.conf 
-  echo You may login with user:$PASSWORD
+if [ -z "$USER" ]; then
+  USER=$(pwgen -N 1)
 fi
+if [ -z "$PASSWORD" ]; then
+  PASSWORD=$(pwgen -N 1)
+fi
+mosquitto_passwd -c -b /etc/mosquitto/users "${USER}" "${PASSWORD}"
+echo "You may login with ${USER}:${PASSWORD}"
 mosquitto -c /etc/mosquitto/mosquitto.conf
